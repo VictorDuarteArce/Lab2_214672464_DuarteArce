@@ -1,4 +1,4 @@
-:- use_module('TDA_Option.pl').
+:- consult('TDA_Option.pl').
 %Constructor:
 %predicado: flow(Id, Name-msg, Option, Flow).
 %Dominio:
