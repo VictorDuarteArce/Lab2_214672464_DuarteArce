@@ -8,7 +8,7 @@
 %!  Chatbots: lista de chatbots
 %!  System: system
 %Meta principal: construir un sistema de chatbots
-system(N, ICCL, Cs, [N, ICCL, Cs1, [], "", -1, -1]):-
+system(N, ICCL, Cs, [N, ICCL, Cs1, [], [], -1, -1]):-
     string(N), integer(ICCL), filter_chatbots_list(Cs, Cs1).
 
 %Modificador:
