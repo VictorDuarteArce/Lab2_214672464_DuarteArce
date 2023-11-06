@@ -143,3 +143,41 @@ systemAddUser(Sin, U, [N, I, Cs, [U|Users], CH, ActCId, ActFId]):-
 %!  Users: lista de 0 o más usuarios
 %Meta principal: Verificar si un usuario está en una lista de usuarios
 user_member_list(U, Users):- member(U, Users).
+%Otros:
+%predicado: systemLogin(Sin, U, Sout).
+%Dominio:
+%!  Sin: system
+%!  U: user
+%!  Sout: system
+%Meta principal: Que un usuario dado inicie sesión en un sistema dado
+systemLogin(Sin, U,[N, I, Cs, [U|Users], CH, ActCId, ActFId]):-
+    not(isLoggedIn(Sin, U)),
+    get_system_users(Sin, Users),
+    user_member_list(U, Users),
+    get_system_name(Sin, N),
+    get_system_InitialChatbotCodeLink(Sin, I),
+    get_system_chatbots(Sin, Cs),
+    get_system_chatHistory(Sin, CH),
+    get_system_actCId(Sin, ActCId),
+    get_system_actFId(Sin, ActFId), !.
+systemLogin(S,_,S).
+%Para mostrar que un usuario ha iniciado sesión, deberá aparecer 2
+% veces en el apartado de usuarios del sistema.
+%Si el usuario dado no corresponde, se devuelve el mismo sistema.
+
+%Verificador:
+%predicado: isLoggedIn(S, U).
+%Dominio:
+%!  S: system
+%!  U: user
+%Meta principal: verificar si un usuario ha iniciado sesión
+%Meta secundaria: contar el número de apariciones de un elemento en una
+% lista
+%Tipo de recursión: Natural
+nApariciones(_, [], 0).
+nApariciones(E, [E|T], N):- nApariciones(E, T, Nt), N is Nt + 1, !.
+nApariciones(E, [_|T], N):- nApariciones(E, T, N), !.
+isLoggedIn(S, U):-
+    get_system_users(S, Users),
+    nApariciones(U, Users, N),
+    N = 2.

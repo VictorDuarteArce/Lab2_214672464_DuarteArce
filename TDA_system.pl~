@@ -115,3 +115,31 @@ get_system_actCId([_,_,_,_,_,ActCId,_],ActCId).
 %Meta principal: obtener la id del flow actual de la conversación de un
 % sistema dado
  get_system_actFId([_,_,_,_,_,_,ActFId], ActFId).
+
+%Modificador:
+%predicado: systemAddUser(Sin, U, Sout).
+%Dominio:
+%!  Sin: system
+%!  U: user
+%!  Sout: system
+%Meta principal: Agregar un usuario dado a un sistema dado sin que se
+% repita
+systemAddUser(S, U, S):- get_system_users(S, Users),
+    user_member_list(U, Users), !.
+systemAddUser(Sin, U, [N, I, Cs, [U|Users], CH, ActCId, ActFId]):-
+    get_system_users(Sin, Users),
+    not(user_member_list(U, Users)),
+    get_system_name(Sin, N),
+    get_system_InitialChatbotCodeLink(Sin, I),
+    get_system_chatbots(Sin, Cs),
+    get_system_chatHistory(Sin, CH),
+    get_system_actCId(Sin, ActCId),
+    get_system_actFId(Sin, ActFId), !.
+
+%Verificador:
+%predicado: user_member_list(U, Users).
+%Dominio:
+%!  U: user
+%!  Users: lista de 0 o más usuarios
+%Meta principal: Verificar si un usuario está en una lista de usuarios
+user_member_list(U, Users):- member(U, Users).
