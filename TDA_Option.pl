@@ -38,3 +38,31 @@ get_Option_code(O, C):- option(C,_,_,_,_,O).
 option_member_list(O, [H|_]):-
     get_Option_code(H, C1), get_Option_code(O, C2), C1 = C2.
 option_member_list(O, [_|T]):- option_member_list(O, T).
+
+%Otro:
+%predicado: option_string(O, Str).
+%Dominio:
+%!  O: option
+%!  Str: string
+%Meta principal: obtener el string de un option
+option_string(O, Str):- get_Option_message(O, Str1), concat(Str1, "\n", Str).
+
+%Otro:
+%predicado: options_string
+%predicado: options_string(Ops, Str).
+%Dominio:
+%!  Ops: lista de 0 o más opciones
+%!  Str: string
+%Meta principal: obtener el string de un flow
+options_string([], "\n").
+options_string([H|T], StrOps):- option_string(H, StrOp),
+     options_string(T, StrOpsT), concat(StrOp, StrOpsT, StrOps).
+
+%Selector:
+%predicado: get_Option_message(O, M).
+%Dominio:
+%!  O: option
+%!  M: message
+%Meta principal: obtener el mensaje de una opción dada.
+get_Option_message(O, M):- option(_,M,_,_,_,O).
+
