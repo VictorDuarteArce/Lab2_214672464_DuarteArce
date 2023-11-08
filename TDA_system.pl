@@ -181,3 +181,23 @@ isLoggedIn(S, U):-
     get_system_users(S, Users),
     nApariciones(U, Users, N),
     N = 2.
+
+%Otros:
+%predicado: systemLogout(Sin, Sout).
+%Dominio:
+%!  Sin: system
+%!  Sout: system
+%Meta principal: cerrar la sesión abierta de un sistema dado
+%Meta secundaria: eliminar usuarios repetidos de una lista de usuarios
+%Tipo de recursión: Natural
+filter_users([], []).
+filter_users([H|T], R):- user_member_list(H, T), filter_users(T, R), !.
+filter_users([H|T], [H|R]):- filter_users(T, R), !.
+systemLogout(Sin, [N, I, Cs, NewUsers, "", ActCId, ActFId]):-
+    get_system_users(Sin, Users),
+    filter_users(Users, NewUsers),
+    get_system_name(Sin, N),
+    get_system_InitialChatbotCodeLink(Sin, I),
+    get_system_chatbots(Sin, Cs),
+    get_system_actCId(Sin, ActCId),
+    get_system_actFId(Sin, ActFId), !.
