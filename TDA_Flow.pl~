@@ -52,3 +52,34 @@ filter_Option_list(L1, L2):- filter_Option_list_aux(L1, [], L2), !.
 %L: F
 option_member_flow(O, F):- get_flow_Options(F, Ops),
     option_member_list(O, Ops).
+
+% Modificador:
+% predicado: flowAddOption(F1, O, F2).
+% Dominio:
+% F1: flow
+% O: option
+% F2: flow
+% Meta principal: agregar una opción sin repetir a un flow.
+flowAddOption(F1, O, F2):-
+    not(option_member_flow(O, F1)),
+    get_flow_id(F1, Id),
+    get_flow_name_msg(F1, Nmsg),
+    get_flow_Options(F1, Ops),
+    flow(Id, Nmsg, [O|Ops], F2), !.
+flowAddOption(F1, O, F2):-
+    option_member_flow(O, F1),
+    get_flow_id(F1, Id),
+    get_flow_name_msg(F1, Nmsg),
+    get_flow_Options(F1, Ops),
+    flow(Id, Nmsg, Ops, F2), !.
+
+%Otro:
+%predicado: flow_string(F, Str).
+%Dominio:
+%!  F: flow
+%!  Str: string
+flow_string(F, Str):- get_flow_Options(F, Ops),
+    get_flow_name_msg(F, Msg1),
+    options_string(Ops, StrOps),
+    concat(Msg1, "\n", Msg2),
+    concat(Msg2, StrOps, Str).

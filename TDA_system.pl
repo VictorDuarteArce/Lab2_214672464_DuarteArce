@@ -8,7 +8,7 @@
 %!  Chatbots: lista de chatbots
 %!  System: system
 %Meta principal: construir un sistema de chatbots
-system(N, ICCL, Cs, [N, ICCL, Cs1, [], "", -1, -1]):-
+system(N, ICCL, Cs, [N, ICCL, Cs1, [], "", 0, 1]):-
     string(N), integer(ICCL), filter_chatbots_list(Cs, Cs1).
 
 %Modificador:
@@ -201,3 +201,79 @@ systemLogout(Sin, [N, I, Cs, NewUsers, "", ActCId, ActFId]):-
     get_system_chatbots(Sin, Cs),
     get_system_actCId(Sin, ActCId),
     get_system_actFId(Sin, ActFId), !.
+
+%Otro:
+%predicado: system_chatbot_flow_string(S, CID, Fid, Str).
+%Dominio:
+%!  S: system
+%!  CID: chatbotID (int)
+%!  Fid: id de flow (int)
+%!  Str: string
+% Meta principal: Obtener el string del system a partir del id del
+%chatbot y flow dadas
+system_chatbot_flow_string(S, CID, Fid, Str):-
+    get_system_chatbots(S, Cs),
+    chosen_chatbot(Cs, CID, C),
+    chatbot_flow_string(C, Fid, Str), !.
+system_chatbot_flow_string(_,_,_,"").
+
+
+%Otro:
+%predicado: choose_chatbot(Cs, CID, C).
+%Dominio:
+%!  Cs: lista de 0 o más chatbots
+%!  CID: chatbotID
+%!  C: chatbot
+%Meta principal: Obtener un chatbot de una lista de chatbots a partir
+% de su id
+chosen_chatbot([H|_], CID, H):- get_chatbot_chatbotID(H, CID).
+chosen_chatbot([_|T], CID, R):- chosen_chatbot(T, CID, R).
+
+
+%Otro:
+%predicado: systemTalkRec(Sin, M, Sout).
+%Dominio:
+%!  Sin: system
+%!  M: message (string)
+%!  Sout: system
+%Meta principal: Conversar con el sistema, solo si el usuario ha
+% iniciado sesión
+systemTalkRec(S, M, [N, I, Cs, [U|Users], NewCH, NewActCId, NewActFId]):-
+    isLoggedIn(S, U),
+    get_system_name(S, N),
+    get_system_InitialChatbotCodeLink(S, I),
+    get_system_chatbots(S, Cs),
+    get_system_users(S, [U|Users]),
+    get_system_actCId(S, ActCId),
+    get_system_actFId(S, ActFId),
+    chosen_chatbot(Cs, ActCId, CAct),
+    get_chatbot_flows(CAct, Fs),
+    chosen_flow(Fs, ActFId, FAct),
+    get_flow_Options(FAct, Ops),
+    chosen_option(Ops, M, OChosen),
+    get_Option_chatbotCodeLink(OChosen, NewActCId),
+    get_Option_InitialflowCodeLink(OChosen, NewActFId),
+    get_system_chatHistory(S, CH),
+    concat(CH, "\n", NewCH0),
+    concat(NewCH0, U, NewCH1),
+    concat(NewCH1, ": ", NewCH2),
+    concat(NewCH2, M, NewCH3),
+    concat(NewCH3, "\nSystem:", NewCH4),
+    system_chatbot_flow_string(S, NewActCId, NewActFId, SysMsg),
+    concat(NewCH4, SysMsg, NewCH), !.
+systemTalkRec(S,_,S).
+
+%Otro:
+%predicado: chosen_option(Ops, M, O).
+%Dominio:
+%!  Ops: lista de 0 o más opciones
+%!  M: message (string)
+%!  O: option
+%Meta principal: elegir la opción dentro de una lista de opciones según
+% el mensaje dado.
+chosen_option([H|_], M, H):- atom_number(M, N), get_Option_code(H, N), !.
+chosen_option([H|_], M, H):-
+    get_Option_keywords(H, Keys),
+    member_keyword(M, Keys), !.
+chosen_option([_|T], M, R):- chosen_option(T, M, R).
+

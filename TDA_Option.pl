@@ -54,7 +54,7 @@ option_string(O, Str):- get_Option_message(O, Str1), concat(Str1, "\n", Str).
 %!  Ops: lista de 0 o más opciones
 %!  Str: string
 %Meta principal: obtener el string de un flow
-options_string([], "\n").
+options_string([], "").
 options_string([H|T], StrOps):- option_string(H, StrOp),
      options_string(T, StrOpsT), concat(StrOp, StrOpsT, StrOps).
 
@@ -66,3 +66,36 @@ options_string([H|T], StrOps):- option_string(H, StrOp),
 %Meta principal: obtener el mensaje de una opción dada.
 get_Option_message(O, M):- option(_,M,_,_,_,O).
 
+%Selector:
+%predicado: get_Option_chatbotCodeLink(O, CCL).
+%Dominio:
+%!  O: option
+%!  CCL: chatbotCodeLink (int)
+%Meta principal: obtener el chatbotCodeLink de una opción dada.
+get_Option_chatbotCodeLink(O, CCL):- option(_,_,CCL,_,_,O).
+
+%Selector:
+%predicado: get_Option_InitialflowCodeLink(O, IFCL).
+%Dominio:
+%!  O: option
+%!  IFCL: InitialflowCodeLink (int)
+%Meta principal: obtener el chatbotCodeLink de una opción dada.
+get_Option_InitialflowCodeLink(O, IFCL):- option(_,_,_,IFCL,_,O).
+
+%Selector:
+%predicado: get_Option_keywords(O, Keys).
+%Dominio:
+%!  O: option
+%!  Keys: keywords
+%Meta principal: obtener el chatbotCodeLink de una opción dada.
+get_Option_keywords(O, Keys):- option(_,_,_,_,Keys,O).
+
+%Otro:
+%predicado: member_keyword(Key, Keys).
+%Dominio:
+%!  Key: keyword
+%!  Keys: lista de 0 o más keywords
+%Meta principal: verificar si una keyword pertenece a una lista de
+% keywords
+member_keyword(Key, [Key|_]).
+member_keyword(Key, [_|T]):- member_keyword(Key, T).

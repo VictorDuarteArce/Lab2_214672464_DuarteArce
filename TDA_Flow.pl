@@ -72,3 +72,15 @@ flowAddOption(F1, O, F2):-
     get_flow_name_msg(F1, Nmsg),
     get_flow_Options(F1, Ops),
     flow(Id, Nmsg, Ops, F2), !.
+
+%Otro:
+%predicado: flow_string(F, Str).
+%Dominio:
+%!  F: flow
+%!  Str: string
+flow_string(F, Str):- get_flow_Options(F, Ops),
+    get_flow_name_msg(F, Msg1),
+    options_string(Ops, StrOps),
+    concat(Msg1, "\n", Msg2),
+    concat(Msg2, StrOps, Str).
+

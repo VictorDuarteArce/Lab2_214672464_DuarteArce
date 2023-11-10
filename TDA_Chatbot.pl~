@@ -1,4 +1,4 @@
-:- consult('Lab2_214672464.pl').
+:- consult('tda_flow.pl').
 
 %Constructor:
 %predicado: chatbot(ChabotID, Name, WelcomeMessage, StartFlowId,
@@ -111,3 +111,27 @@ chatbotAddFlow(Cin, F, Cout):-
 %Meta principal: agregar un flow al final de una lista de flows
 insertar_flow_fin(F, [], [F]).
 insertar_flow_fin(F, [H|T], [H|R]):- insertar_flow_fin(F, T, R).
+
+%Otro:
+%predicado: chatbot_flow_string(C, Fid, Str).
+%Dominio:
+%!  C: chatbot
+%!  Fid: id de un flow (int)
+%!  Str: string
+%Meta principal: obtener el string del flow de un chatbot dado
+% a partir de su id
+chatbot_flow_string(C, Fid, Str):-
+    get_chatbot_flows(C, Fs),
+    chosen_flow(Fs, Fid, F),
+    flow_string(F, StrF1),
+    concat(" ", StrF1, Str), !.
+%Otro:
+%predicado: chosen_flow(Fs, Id, F).
+%Dominio:
+%!  Fs: lista de 0 o más flows
+%!  Id: id de un flow
+%!  F: flow
+%Meta principal: escoger un flow de una lista dada a partir de
+% su id
+chosen_flow([H|_], Id, H):- get_flow_id(H, Id).
+chosen_flow([_|T], Id, R):- choose_flow(T, Id, R).
