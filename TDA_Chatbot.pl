@@ -124,7 +124,11 @@ chatbot_flow_string(C, Fid, Str):-
     get_chatbot_flows(C, Fs),
     chosen_flow(Fs, Fid, F),
     flow_string(F, StrF1),
-    concat(" ", StrF1, Str), !.
+    get_chatbot_name(C, N),
+    concat(N, " ", Str0),
+    concat(Str0, "", Str1),
+    concat(Str1, " \n", Str2),
+    concat(Str2, StrF1, Str), !.
 %Otro:
 %predicado: chosen_flow(Fs, Id, F).
 %Dominio:

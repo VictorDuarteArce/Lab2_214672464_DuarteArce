@@ -1,5 +1,20 @@
 :- consult('TDA_Chatbot.pl').
 
+%TDA System:
+%El TDA System se compone de los siguientes TDA:
+%name (string)
+%InitialChatbotCodeLink (int)
+%Chatbots: lista de 0 o más Chatbots
+%Users: listas de 0 o más usuarios
+%chatHistory: Lista de Historiales de chat de 0 o más usuarios
+%!  Historial: Lista que contiene:
+%!  user (string)
+%!  chat (string formateado para mostrar)
+%actCID (int): representa el id del chatbot con el que se está
+% conversando
+%actFid (int): representa el id del flow con el que se está
+% conversando
+
 %Constructor:
 %predicado: system(Name, InitialChatbotCodeLink, Chatbots, System).
 %Dominio:
@@ -8,7 +23,7 @@
 %!  Chatbots: lista de chatbots
 %!  System: system
 %Meta principal: construir un sistema de chatbots
-system(N, ICCL, Cs, [N, ICCL, Cs1, [], "", 0, 1]):-
+system(N, ICCL, Cs, [N, ICCL, Cs1, [], [], -1, -1]):-
     string(N), integer(ICCL), filter_chatbots_list(Cs, Cs1).
 
 %Modificador:
@@ -143,27 +158,31 @@ systemAddUser(Sin, U, [N, I, Cs, [U|Users], CH, ActCId, ActFId]):-
 %!  Users: lista de 0 o más usuarios
 %Meta principal: Verificar si un usuario está en una lista de usuarios
 user_member_list(U, Users):- member(U, Users).
-%Otros:
+
+%Modificador:
 %predicado: systemLogin(Sin, U, Sout).
 %Dominio:
 %!  Sin: system
 %!  U: user
 %!  Sout: system
-%Meta principal: Que un usuario dado inicie sesión en un sistema dado
-systemLogin(Sin, U,[N, I, Cs, [U|Users], CH, ActCId, ActFId]):-
-    not(isLoggedIn(Sin, U)),
-    get_system_users(Sin, Users),
+%Meta principal: Que un usuario dado inicie sesión en un sistema dado.
+%Meta secundaria: Dejar el sistema listo para hablar.
+systemLogin(S, U,[N, I, Cs, [U|Users], [[U, First]|CH], I, FId]):-
+    not(isLoggedIn(S, U)),
+    get_system_users(S, Users),
     user_member_list(U, Users),
-    get_system_name(Sin, N),
-    get_system_InitialChatbotCodeLink(Sin, I),
-    get_system_chatbots(Sin, Cs),
-    get_system_chatHistory(Sin, CH),
-    get_system_actCId(Sin, ActCId),
-    get_system_actFId(Sin, ActFId), !.
+    get_system_name(S, N),
+    get_system_InitialChatbotCodeLink(S, I),
+    get_system_chatbots(S, Cs),
+    get_system_chatHistory(S, CH),
+    chosen_chatbot(Cs, I, C),
+    first_message(S, First),
+    get_chatbot_startFlowId(C, FId), !.
 systemLogin(S,_,S).
 %Para mostrar que un usuario ha iniciado sesión, deberá aparecer 2
 % veces en el apartado de usuarios del sistema.
-%Si el usuario dado no corresponde, se devuelve el mismo sistema.
+%Si el usuario dado no corresponde a los usuarios del sistema, se
+% devuelve el mismo sistema.
 
 %Verificador:
 %predicado: isLoggedIn(S, U).
@@ -182,7 +201,7 @@ isLoggedIn(S, U):-
     nApariciones(U, Users, N),
     N = 2.
 
-%Otros:
+%Modificador:
 %predicado: systemLogout(Sin, Sout).
 %Dominio:
 %!  Sin: system
@@ -193,14 +212,13 @@ isLoggedIn(S, U):-
 filter_users([], []).
 filter_users([H|T], R):- user_member_list(H, T), filter_users(T, R), !.
 filter_users([H|T], [H|R]):- filter_users(T, R), !.
-systemLogout(Sin, [N, I, Cs, NewUsers, "", ActCId, ActFId]):-
+systemLogout(Sin, [N, I, Cs, NewUsers, CH, -1, -1]):-
     get_system_users(Sin, Users),
     filter_users(Users, NewUsers),
     get_system_name(Sin, N),
     get_system_InitialChatbotCodeLink(Sin, I),
     get_system_chatbots(Sin, Cs),
-    get_system_actCId(Sin, ActCId),
-    get_system_actFId(Sin, ActFId), !.
+    get_system_chatHistory(Sin, CH), !.
 
 %Otro:
 %predicado: system_chatbot_flow_string(S, CID, Fid, Str).
@@ -230,7 +248,7 @@ chosen_chatbot([H|_], CID, H):- get_chatbot_chatbotID(H, CID).
 chosen_chatbot([_|T], CID, R):- chosen_chatbot(T, CID, R).
 
 
-%Otro:
+%Modificador:
 %predicado: systemTalkRec(Sin, M, Sout).
 %Dominio:
 %!  Sin: system
@@ -238,8 +256,8 @@ chosen_chatbot([_|T], CID, R):- chosen_chatbot(T, CID, R).
 %!  Sout: system
 %Meta principal: Conversar con el sistema, solo si el usuario ha
 % iniciado sesión
-systemTalkRec(S, M, [N, I, Cs, [U|Users], NewCH, NewActCId, NewActFId]):-
-    isLoggedIn(S, U),
+systemTalkRec(S, M, [N, I, Cs, [U|Users], [[U, NewCH]|CH],NewActCId, NewActFId]):-
+    isLoggedIn(S, U), %Verifica si el usuario ha iniciado sesión
     get_system_name(S, N),
     get_system_InitialChatbotCodeLink(S, I),
     get_system_chatbots(S, Cs),
@@ -253,12 +271,12 @@ systemTalkRec(S, M, [N, I, Cs, [U|Users], NewCH, NewActCId, NewActFId]):-
     chosen_option(Ops, M, OChosen),
     get_Option_chatbotCodeLink(OChosen, NewActCId),
     get_Option_InitialflowCodeLink(OChosen, NewActFId),
-    get_system_chatHistory(S, CH),
-    concat(CH, "\n", NewCH0),
+    get_system_chatHistory(S, [[U,CHStr]|CH]),
+    concat(CHStr, "\n", NewCH0),
     concat(NewCH0, U, NewCH1),
     concat(NewCH1, ": ", NewCH2),
     concat(NewCH2, M, NewCH3),
-    concat(NewCH3, "\nSystem:", NewCH4),
+    concat(NewCH3, "\nSystem: ", NewCH4),
     system_chatbot_flow_string(S, NewActCId, NewActFId, SysMsg),
     concat(NewCH4, SysMsg, NewCH), !.
 systemTalkRec(S,_,S).
@@ -277,3 +295,67 @@ chosen_option([H|_], M, H):-
     member_keyword(M, Keys), !.
 chosen_option([_|T], M, R):- chosen_option(T, M, R).
 
+%Otro:
+%predicado: first_message(Sin, Str).
+%Dominio:
+%!  Sin: system
+%!  Str: string
+%Meta principal: obtener el primer mensaje que debe decir el sistema
+% dado
+first_message(S, Str):-
+    get_system_InitialChatbotCodeLink(S, I),
+    get_system_chatbots(S, Cs),
+    chosen_chatbot(Cs, I, C),
+    get_chatbot_welcomeMessage(C, W),
+    get_chatbot_startFlowId(C, FID),
+    system_chatbot_flow_string(S, I, FID, Str1),
+    concat(W, "\nSystem: ", Str2),
+    concat(Str2, Str1, Str).
+
+%Otro:
+%predicado: systemSynthesis(Sin, U, Str).
+%Dominio:
+%!  Sin: system
+%!  U: user
+%!  Str: string
+%Meta principal: Obtener la conversación de un usuario dado con el
+% system
+systemSynthesis(S, U, Str):-
+    get_system_chatHistory(S, CH),
+    get_conversation_from_CH(CH, U, Str), !.
+get_conversation_from_CH([[U, Str]|_], U, Str).
+get_conversation_from_CH([_|T], U, Str):-
+    get_conversation_from_CH(T, U, Str), !.
+
+%Otro:
+%predicado: systemSimulate(Sin, Max, Seed, Sout).
+%Dominio:
+%!  Sin: system
+%!  Max: maxInteractions (int)
+%!  Seed: seed (int)
+%!  Sout: system
+%Meta principal: simular una conversación con el sistema.
+messages(Seed, L):- messages_aux(Seed, K), reverse(K, L).
+messages_aux(Seed, [Seed]):- integer(Seed), Seed < 10, !.
+messages_aux(Seed, [H|T]):-
+    H is Seed mod 10, NewSeed is div(Seed, 10), messages_aux(NewSeed, T), !.
+systemSimulate_aux(S, 0,_, S).
+systemSimulate_aux(S,_,[], S).
+systemSimulate_aux(Sin, Max, [H|T], Sout):-
+    number_string(H, Hs),
+    systemTalkRec(Sin, Hs, Sout1),
+    NewMax is Max - 1,
+    systemSimulate_aux(Sout1, NewMax, T, Sout).
+
+systemSimulate(Sin, Max, Seed, Sout):-
+    systemAddUser(Sin, "user", Sin1),
+    systemLogin(Sin1, "user", Sin2),
+    myRandom(Seed, RandomizedSeed),
+    messages(RandomizedSeed, Msgs),
+    systemSimulate_aux(Sin2, Max, Msgs, Sout), !.
+
+%Otro:
+myRandom(Xn, Xn1):-
+	MulTemp is 1103515245 * Xn,
+	SumTemp is MulTemp + 12345,
+	Xn1 is SumTemp mod 2147483648.
