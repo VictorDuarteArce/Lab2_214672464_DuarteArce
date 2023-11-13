@@ -35,6 +35,8 @@ get_Option_code(O, C):- option(C,_,_,_,_,O).
 %Dominio:
 %O: option
 %L: Lista de options
+%Meta principal: verificar si una opción pertenece a una lista de
+% options
 option_member_list(O, [H|_]):-
     get_Option_code(H, C1), get_Option_code(O, C2), C1 = C2.
 option_member_list(O, [_|T]):- option_member_list(O, T).

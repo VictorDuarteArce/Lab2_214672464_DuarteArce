@@ -1,18 +1,18 @@
-:- consult('TDA_Chatbot.pl').
+:- consult('TDAChatbot_214672464_DuarteArce.pl').
 
 %TDA System:
 %El TDA System se compone de los siguientes TDA:
 %name (string)
 %InitialChatbotCodeLink (int)
-%Chatbots: lista de 0 o más Chatbots
-%Users: listas de 0 o más usuarios
-%chatHistory: Lista de Historiales de chat de 0 o más usuarios
+%Chatbots: lista de 0 o mï¿½s Chatbots
+%Users: listas de 0 o mï¿½s usuarios
+%chatHistory: Lista de Historiales de chat de 0 o mï¿½s usuarios
 %!  Historial: Lista que contiene:
 %!  user (string)
 %!  chat (string formateado para mostrar)
-%actCID (int): representa el id del chatbot con el que se está
+%actCID (int): representa el id del chatbot con el que se estï¿½
 % conversando
-%actFid (int): representa el id del flow con el que se está
+%actFid (int): representa el id del flow con el que se estï¿½
 % conversando
 
 %Constructor:
@@ -29,10 +29,10 @@ system(N, ICCL, Cs, [N, ICCL, Cs1, [], [], -1, -1]):-
 %Modificador:
 %predicado: filter_chatbots_list(CsIn, CsOut).
 %Dominio:
-%!  CsIn: lista de 0 o más chatbots
-%!  CsOut: lista de 0 o más chatbots
+%!  CsIn: lista de 0 o mï¿½s chatbots
+%!  CsOut: lista de 0 o mï¿½s chatbots
 %Meta principal: filtrar por la id una lista de chatbots
-%Tipo de recursión: de Cola
+%Tipo de recursiï¿½n: de Cola
 filter_chatbots_list_aux([], R, R1):- reverse(R, R1).
 filter_chatbots_list_aux([H|T], L, R):- not(chatbot_member_list(H, L)),
     filter_chatbots_list_aux(T, [H|L], R).
@@ -46,10 +46,10 @@ filter_chatbots_list(ChatbotsIn, ChatbotsOut):-
 %predicado: chatbot_member_list(C, L).
 %Dominio:
 %!  C: chatbot
-%!  L: lista de 0 o más chatbots
+%!  L: lista de 0 o mï¿½s chatbots
 %Meta principal: averiguar en base a la id si un chatbot pertenece a
 % una lista
-%Tipo de recursión: de Cola
+%Tipo de recursiï¿½n: de Cola
 chatbot_member_list(C, [H|_]):- get_chatbot_chatbotID(C, Id1),
     get_chatbot_chatbotID(H, Id2), Id1 = Id2.
 chatbot_member_list(C, [_|T]):- chatbot_member_list(C, T), !.
@@ -60,7 +60,7 @@ chatbot_member_list(C, [_|T]):- chatbot_member_list(C, T), !.
 %!  SystemIn: system
 %!  Chatbot: chatbot
 %!  SystemOut: system
-%Meta principal: añadir un chatbot sin repetir a un sistema
+%Meta principal: aï¿½adir un chatbot sin repetir a un sistema
 systemAddChatbot(Sin, C, [N, I, [C|Cs], U, CH, ActCId, ActFId]):-
     get_system_chatbots(Sin, Cs),
     not(chatbot_member_list(C, Cs)),
@@ -93,7 +93,7 @@ get_system_InitialChatbotCodeLink([_,I,_,_,_,_,_], I).
 %predicado: get_system_chatbots(S, Cs).
 %Dominio:
 %!  S: system
-%!  Cs: lista de 0 o más chatbots
+%!  Cs: lista de 0 o mï¿½s chatbots
 %Meta principal: obtener los chatbots de un sistema dado
 get_system_chatbots([_,_,Cs,_,_,_,_], Cs).
 
@@ -101,7 +101,7 @@ get_system_chatbots([_,_,Cs,_,_,_,_], Cs).
 %predicado: get_system_users(S, U).
 %Dominio:
 %!  S: system
-%!  U: lista de 0 o más users
+%!  U: lista de 0 o mï¿½s users
 %Meta principal: obtener los usuarios que hay en un sistema dado
 get_system_users([_,_,_,U,_,_,_], U).
 
@@ -118,7 +118,7 @@ get_system_chatHistory([_,_,_,_,CH,_,_], CH).
 %Dominio:
 %!  S: system
 %!  ActCId: actCId
-%Meta principal: obtener la id del chatbot actual de la conversación de
+%Meta principal: obtener la id del chatbot actual de la conversaciï¿½n de
 % un sistema dado
 get_system_actCId([_,_,_,_,_,ActCId,_],ActCId).
 
@@ -127,7 +127,7 @@ get_system_actCId([_,_,_,_,_,ActCId,_],ActCId).
 %Dominio:
 %!  S: system
 %!  ActCId: actFId
-%Meta principal: obtener la id del flow actual de la conversación de un
+%Meta principal: obtener la id del flow actual de la conversaciï¿½n de un
 % sistema dado
  get_system_actFId([_,_,_,_,_,_,ActFId], ActFId).
 
@@ -155,8 +155,8 @@ systemAddUser(Sin, U, [N, I, Cs, [U|Users], CH, ActCId, ActFId]):-
 %predicado: user_member_list(U, Users).
 %Dominio:
 %!  U: user
-%!  Users: lista de 0 o más usuarios
-%Meta principal: Verificar si un usuario está en una lista de usuarios
+%!  Users: lista de 0 o mï¿½s usuarios
+%Meta principal: Verificar si un usuario estï¿½ en una lista de usuarios
 user_member_list(U, Users):- member(U, Users).
 
 %Modificador:
@@ -165,7 +165,7 @@ user_member_list(U, Users):- member(U, Users).
 %!  Sin: system
 %!  U: user
 %!  Sout: system
-%Meta principal: Que un usuario dado inicie sesión en un sistema dado.
+%Meta principal: Que un usuario dado inicie sesiï¿½n en un sistema dado.
 %Meta secundaria: Dejar el sistema listo para hablar.
 systemLogin(S, U,[N, I, Cs, [U|Users], [[U, First]|CH], I, FId]):-
     not(isLoggedIn(S, U)),
@@ -179,7 +179,7 @@ systemLogin(S, U,[N, I, Cs, [U|Users], [[U, First]|CH], I, FId]):-
     first_message(S, First),
     get_chatbot_startFlowId(C, FId), !.
 systemLogin(S,_,S).
-%Para mostrar que un usuario ha iniciado sesión, deberá aparecer 2
+%Para mostrar que un usuario ha iniciado sesiï¿½n, deberï¿½ aparecer 2
 % veces en el apartado de usuarios del sistema.
 %Si el usuario dado no corresponde a los usuarios del sistema, se
 % devuelve el mismo sistema.
@@ -189,10 +189,10 @@ systemLogin(S,_,S).
 %Dominio:
 %!  S: system
 %!  U: user
-%Meta principal: verificar si un usuario ha iniciado sesión
-%Meta secundaria: contar el número de apariciones de un elemento en una
+%Meta principal: verificar si un usuario ha iniciado sesiï¿½n
+%Meta secundaria: contar el nï¿½mero de apariciones de un elemento en una
 % lista
-%Tipo de recursión: Natural
+%Tipo de recursiï¿½n: Natural
 nApariciones(_, [], 0).
 nApariciones(E, [E|T], N):- nApariciones(E, T, Nt), N is Nt + 1, !.
 nApariciones(E, [_|T], N):- nApariciones(E, T, N), !.
@@ -206,9 +206,9 @@ isLoggedIn(S, U):-
 %Dominio:
 %!  Sin: system
 %!  Sout: system
-%Meta principal: cerrar la sesión abierta de un sistema dado
+%Meta principal: cerrar la sesiï¿½n abierta de un sistema dado
 %Meta secundaria: eliminar usuarios repetidos de una lista de usuarios
-%Tipo de recursión: Natural
+%Tipo de recursiï¿½n: Natural
 filter_users([], []).
 filter_users([H|T], R):- user_member_list(H, T), filter_users(T, R), !.
 filter_users([H|T], [H|R]):- filter_users(T, R), !.
@@ -239,7 +239,7 @@ system_chatbot_flow_string(_,_,_,"").
 %Otro:
 %predicado: choose_chatbot(Cs, CID, C).
 %Dominio:
-%!  Cs: lista de 0 o más chatbots
+%!  Cs: lista de 0 o mï¿½s chatbots
 %!  CID: chatbotID
 %!  C: chatbot
 %Meta principal: Obtener un chatbot de una lista de chatbots a partir
@@ -255,9 +255,9 @@ chosen_chatbot([_|T], CID, R):- chosen_chatbot(T, CID, R).
 %!  M: message (string)
 %!  Sout: system
 %Meta principal: Conversar con el sistema, solo si el usuario ha
-% iniciado sesión
+% iniciado sesiï¿½n
 systemTalkRec(S, M, [N, I, Cs, [U|Users], [[U, NewCH]|CH],NewActCId, NewActFId]):-
-    isLoggedIn(S, U), %Verifica si el usuario ha iniciado sesión
+    isLoggedIn(S, U), %Verifica si el usuario ha iniciado sesiï¿½n
     get_system_name(S, N),
     get_system_InitialChatbotCodeLink(S, I),
     get_system_chatbots(S, Cs),
@@ -284,11 +284,11 @@ systemTalkRec(S,_,S).
 %Otro:
 %predicado: chosen_option(Ops, M, O).
 %Dominio:
-%!  Ops: lista de 0 o más opciones
+%!  Ops: lista de 0 o mï¿½s opciones
 %!  M: message (string)
 %!  O: option
-%Meta principal: elegir la opción dentro de una lista de opciones según
-% el mensaje dado.
+% Meta principal: elegir la opciï¿½n dentro de una lista de opciones
+% segï¿½yn el mensaje dado.
 chosen_option([H|_], M, H):- atom_number(M, N), get_Option_code(H, N), !.
 chosen_option([H|_], M, H):-
     get_Option_keywords(H, Keys),
@@ -318,7 +318,7 @@ first_message(S, Str):-
 %!  Sin: system
 %!  U: user
 %!  Str: string
-%Meta principal: Obtener la conversación de un usuario dado con el
+%Meta principal: Obtener la conversaciï¿½n de un usuario dado con el
 % system
 systemSynthesis(S, U, Str):-
     get_system_chatHistory(S, CH),
@@ -334,7 +334,7 @@ get_conversation_from_CH([_|T], U, Str):-
 %!  Max: maxInteractions (int)
 %!  Seed: seed (int)
 %!  Sout: system
-%Meta principal: simular una conversación con el sistema.
+%Meta principal: simular una conversaciï¿½n con el sistema.
 messages(Seed, L):- messages_aux(Seed, K), reverse(K, L).
 messages_aux(Seed, [Seed]):- integer(Seed), Seed < 10, !.
 messages_aux(Seed, [H|T]):-
