@@ -1,4 +1,4 @@
-:- consult('TDA_Chatbot.pl').
+:- consult('TDAChatbot_214672464_DuarteArce.pl').
 
 %TDA System:
 %El TDA System se compone de los siguientes TDA:
@@ -118,7 +118,7 @@ get_system_chatHistory([_,_,_,_,CH,_,_], CH).
 %Dominio:
 %!  S: system
 %!  ActCId: actCId
-%Meta principal: obtener la id del chatbot actual de la conversación de
+%Meta principal: obtener la id del chatbot actual de la conversaciï¿½n de
 % un sistema dado
 get_system_actCId([_,_,_,_,_,ActCId,_],ActCId).
 
@@ -127,7 +127,7 @@ get_system_actCId([_,_,_,_,_,ActCId,_],ActCId).
 %Dominio:
 %!  S: system
 %!  ActCId: actFId
-%Meta principal: obtener la id del flow actual de la conversación de un
+%Meta principal: obtener la id del flow actual de la conversaciï¿½n de un
 % sistema dado
  get_system_actFId([_,_,_,_,_,_,ActFId], ActFId).
 
@@ -206,9 +206,9 @@ isLoggedIn(S, U):-
 %Dominio:
 %!  Sin: system
 %!  Sout: system
-%Meta principal: cerrar la sesión abierta de un sistema dado
+%Meta principal: cerrar la sesiï¿½n abierta de un sistema dado
 %Meta secundaria: eliminar usuarios repetidos de una lista de usuarios
-%Tipo de recursión: Natural
+%Tipo de recursiï¿½n: Natural
 filter_users([], []).
 filter_users([H|T], R):- user_member_list(H, T), filter_users(T, R), !.
 filter_users([H|T], [H|R]):- filter_users(T, R), !.
@@ -239,7 +239,7 @@ system_chatbot_flow_string(_,_,_,"").
 %Otro:
 %predicado: choose_chatbot(Cs, CID, C).
 %Dominio:
-%!  Cs: lista de 0 o más chatbots
+%!  Cs: lista de 0 o mï¿½s chatbots
 %!  CID: chatbotID
 %!  C: chatbot
 %Meta principal: Obtener un chatbot de una lista de chatbots a partir
@@ -255,9 +255,9 @@ chosen_chatbot([_|T], CID, R):- chosen_chatbot(T, CID, R).
 %!  M: message (string)
 %!  Sout: system
 %Meta principal: Conversar con el sistema, solo si el usuario ha
-% iniciado sesión
+% iniciado sesiï¿½n
 systemTalkRec(S, M, [N, I, Cs, [U|Users], [[U, NewCH]|CH],NewActCId, NewActFId]):-
-    isLoggedIn(S, U), %Verifica si el usuario ha iniciado sesión
+    isLoggedIn(S, U), %Verifica si el usuario ha iniciado sesiï¿½n
     get_system_name(S, N),
     get_system_InitialChatbotCodeLink(S, I),
     get_system_chatbots(S, Cs),
@@ -287,8 +287,8 @@ systemTalkRec(S,_,S).
 %!  Ops: lista de 0 o mï¿½s opciones
 %!  M: message (string)
 %!  O: option
-%Meta principal: elegir la opciï¿½n dentro de una lista de opciones segï¿½n
-% el mensaje dado.
+% Meta principal: elegir la opciï¿½n dentro de una lista de opciones
+% segï¿½yn el mensaje dado.
 chosen_option([H|_], M, H):- atom_number(M, N), get_Option_code(H, N), !.
 chosen_option([H|_], M, H):-
     get_Option_keywords(H, Keys),
@@ -334,7 +334,7 @@ get_conversation_from_CH([_|T], U, Str):-
 %!  Max: maxInteractions (int)
 %!  Seed: seed (int)
 %!  Sout: system
-%Meta principal: simular una conversación con el sistema.
+%Meta principal: simular una conversaciï¿½n con el sistema.
 messages(Seed, L):- messages_aux(Seed, K), reverse(K, L).
 messages_aux(Seed, [Seed]):- integer(Seed), Seed < 10, !.
 messages_aux(Seed, [H|T]):-
@@ -359,3 +359,34 @@ myRandom(Xn, Xn1):-
 	MulTemp is 1103515245 * Xn,
 	SumTemp is MulTemp + 12345,
 	Xn1 is SumTemp mod 2147483648.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

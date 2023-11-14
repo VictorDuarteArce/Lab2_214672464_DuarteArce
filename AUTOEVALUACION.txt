@@ -1,0 +1,14 @@
+Predicado;Grado de alcance (0-1);Descripción
+option;1;El sistema es capaz de crear opciones
+flow;1;El sistema es capaz de crear flows
+flowAddOption;1;El sistema es capaz de agregar opciones si es que no existen ya en el flow
+chatbot;1;El sistema es capaz de crear chatbots
+chatbotAddFlow;1;El sistema es capaz de agregar flows si es que no existen ya en el chatbot
+system;1;El sistema es capaz de construir systems.
+systemAddChatbot;1:El sistema es capaz de agregar chatbots si es que no existen ya en el system.
+systemAddUser;1;El sistema es capaz de agregar usuarios si es que no existen ya en el system.
+systemLogin;1;El sistema es capaz de iniciar sesión de un usuario si es que ya se ingresó en el system.
+systemLogout;1;El sistema es capaz de cerrar la sesión abierta.
+systemTalkRec;1;El sistema es capaz de hablar con el chatbot.
+systemSynthesis;1;El sistema es capaz de crear una síntesis.
+systemSimulate;1;El sistema es capaz de simular una conversación con un límite de interacciones.

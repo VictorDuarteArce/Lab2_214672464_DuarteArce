@@ -1,10 +1,10 @@
-:- consult('TDA_Option.pl').
+:- consult('TDAOption_21467246_DuarteArce.pl').
 %Constructor:
 %predicado: flow(Id, Name-msg, Option, Flow).
 %Dominio:
 % Id: id (Int)
 % Name-msg: name-msg (String)
-% Option: Options (lista de 0 o más Options)
+% Option: Options (lista de 0 o mï¿½s Options)
 % Flow: Flow
 %Meta principal: crear un TDA Flow
 flow(Id, Nmsg, Ops, [Id, Nmsg, Ops1]):- integer(Id), string(Nmsg),
@@ -38,7 +38,7 @@ get_flow_name_msg(F, Nmsg):- flow(_,Nmsg,_, F).
 % L2: Lista de Options
 %Meta principal: filtrar una lista de opciones en base al code para que
 % no aparezcan opciones repetidas.
-%Tipo de Recursión: de cola.
+%Tipo de Recursiï¿½n: de cola.
 filter_Option_list_aux([], R, R1):- reverse(R, R1).
 filter_Option_list_aux([H|T], L, R):- not(option_member_list(H, L)),
     filter_Option_list_aux(T, [H|L], R).
@@ -59,7 +59,7 @@ option_member_flow(O, F):- get_flow_Options(F, Ops),
 % F1: flow
 % O: option
 % F2: flow
-% Meta principal: agregar una opción sin repetir a un flow.
+% Meta principal: agregar una opciï¿½n sin repetir a un flow.
 flowAddOption(F1, O, F2):-
     not(option_member_flow(O, F1)),
     get_flow_id(F1, Id),
@@ -83,3 +83,4 @@ flow_string(F, Str):- get_flow_Options(F, Ops),
     options_string(Ops, StrOps),
     concat(Msg1, "\n", Msg2),
     concat(Msg2, StrOps, Str).
+

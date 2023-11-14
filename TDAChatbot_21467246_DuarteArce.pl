@@ -1,4 +1,4 @@
-:- consult('tda_flow.pl').
+:- consult('TDAFlow_21467246_DuarteArce.pl').
 
 %Constructor:
 %predicado: chatbot(ChabotID, Name, WelcomeMessage, StartFlowId,
@@ -8,7 +8,7 @@
 % Name: name (string)
 % WelcomeMessage: welcomeMessage (string)
 % StartFlowId: startFlowId (int)
-% Flows: lista de 0 o más flows
+% Flows: lista de 0 o mï¿½s flows
 % Chatbot: chatbot
 chatbot(CID, Name, WcmMsg, StFId, Flows,
         [CID, Name, WcmMsg, StFId, Flows1]):-
@@ -17,9 +17,9 @@ chatbot(CID, Name, WcmMsg, StFId, Flows,
 %Modificador:
 %predicado: filter_flows_list(FlowsIn, FlowsOut).
 %Dominio:
-%FlowsIn: lista de 0 o más Flows
-%FlowsOut: lista de 0 o más Flows
-%Tipo de recursión: de Cola
+%FlowsIn: lista de 0 o mï¿½s Flows
+%FlowsOut: lista de 0 o mï¿½s Flows
+%Tipo de recursiï¿½n: de Cola
 filter_flows_list_aux([], R, R1):- reverse(R, R1).
 filter_flows_list_aux([H|T], L, R):- not(flow_member_list(H, L)),
     filter_flows_list_aux(T, [H|L], R).
@@ -32,8 +32,8 @@ filter_flows_list(FlowsIn, FlowsOut):-
 %predicado: flow_member_list(Flow, List).
 %Dominio:
 % Flow: flow
-% List: lista de 0 o más flows
-%Tipo de recursión: de Cola
+% List: lista de 0 o mï¿½s flows
+%Tipo de recursiï¿½n: de Cola
 flow_member_list(F, [H|_]):- get_flow_id(F, Id1),
     get_flow_id(H, Id2), Id1 = Id2.
 flow_member_list(F, [_|T]):- flow_member_list(F, T), !.
@@ -42,7 +42,7 @@ flow_member_list(F, [_|T]):- flow_member_list(F, T), !.
 %predicado: get_chatbot_flows(Chatbot, Flows).
 %Dominio:
 % Chatbot: chatbot
-% Flows: lista de 0 o más flows
+% Flows: lista de 0 o mï¿½s flows
 %Meta principal: obtener la lista de flows de un chatbot
 get_chatbot_flows(Chatbot, Flows):-
     chatbot(_,_,_,_,Flows, Chatbot).
@@ -85,7 +85,7 @@ get_chatbot_startFlowId(C, S):- chatbot(_,_,_,S,_, C).
 % ChatbotIn: chatbot
 % Flow: flow
 % ChatbotOut: chatbot
-%Tipo de recursión: Natural
+%Tipo de recursiï¿½n: Natural
 %Meta principal: agregar un flow al final de la lista de flows
 %del chatbot sin que se repitan, en caso contrario, dejar igual
 %la estructura.
@@ -105,9 +105,9 @@ chatbotAddFlow(Cin, F, Cout):-
 %predicado: insertar_flow_fin(Flow, FlowsIn, FlowsOut).
 %Dominio:
 % Flow: flow
-% FlowsIn: lista de 0 o más flows
-% FlowsOut: lista de 1 o más flows
-%Tipo de recursión: Natural
+% FlowsIn: lista de 0 o mï¿½s flows
+% FlowsOut: lista de 1 o mï¿½s flows
+%Tipo de recursiï¿½n: Natural
 %Meta principal: agregar un flow al final de una lista de flows
 insertar_flow_fin(F, [], [F]).
 insertar_flow_fin(F, [H|T], [H|R]):- insertar_flow_fin(F, T, R).
@@ -125,7 +125,6 @@ chatbot_flow_string(C, Fid, Str):-
     chosen_flow(Fs, Fid, F),
     flow_string(F, StrF1),
     get_chatbot_name(C, N),
-    get_chatbot_welcomeMessage(C, W),
     concat(N, " ", Str0),
     concat(Str0, "", Str1),
     concat(Str1, " \n", Str2),
@@ -133,7 +132,7 @@ chatbot_flow_string(C, Fid, Str):-
 %Otro:
 %predicado: chosen_flow(Fs, Id, F).
 %Dominio:
-%!  Fs: lista de 0 o más flows
+%!  Fs: lista de 0 o mï¿½s flows
 %!  Id: id de un flow
 %!  F: flow
 %Meta principal: escoger un flow de una lista dada a partir de

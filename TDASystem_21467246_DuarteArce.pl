@@ -1,4 +1,4 @@
-:- consult('TDAChatbot_214672464_DuarteArce.pl').
+:- consult('TDAChatbot_21467246_DuarteArce.pl').
 
 %TDA System:
 %El TDA System se compone de los siguientes TDA:
@@ -359,3 +359,34 @@ myRandom(Xn, Xn1):-
 	MulTemp is 1103515245 * Xn,
 	SumTemp is MulTemp + 12345,
 	Xn1 is SumTemp mod 2147483648.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
